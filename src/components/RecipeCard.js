@@ -34,7 +34,7 @@ export default function RecipeCard({ recipe, isFavorite, onToggleFavorite }) {
       </div>
       
       <div className="p-4 flex-grow flex flex-col">
-        <h3 className="font-bold text-lg mb-2 line-clamp-1">{recipe.label}</h3>
+        <h3 className="font-bold text-lg text-black mb-2 line-clamp-1">{recipe.label}</h3>
         
         <div className="flex flex-wrap gap-2 mb-3">
           {recipe.dietLabels?.slice(0, 3).map(label => (
