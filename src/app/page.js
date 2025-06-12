@@ -44,30 +44,30 @@ export default function RecipeApp() {
 
   const fetchRecipes = async () => {
     if (!searchTerm.trim()) return;
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const from = (currentPage - 1) * itemsPerPage;
       const to = from + itemsPerPage;
-      
+
       let apiUrl = `https://api.edamam.com/api/recipes/v2?type=public&q=${searchTerm}&app_id=${APP_ID}&app_key=${APP_KEY}&from=${from}&to=${to}`;
-      
+
       // Apply filters
       if (filters.diet) apiUrl += `&diet=${filters.diet}`;
       if (filters.mealType) apiUrl += `&mealType=${filters.mealType}`;
       if (filters.cuisineType) apiUrl += `&cuisineType=${filters.cuisineType}`;
       if (filters.time) apiUrl += `&time=${filters.time}`;
       if (filters.calories) apiUrl += `&calories=${filters.calories}`;
-      
+
       const response = await fetch(apiUrl, {
         headers: {
           'Edamam-Account-User': 'tkdod24'
         }
       });
       const data = await response.json();
-      
+
       if (data.hits) {
         const sortedRecipes = sortRecipes(data.hits.map(hit => hit.recipe));
         setRecipes(sortedRecipes);
@@ -84,7 +84,7 @@ export default function RecipeApp() {
   };
 
   const sortRecipes = (recipes) => {
-    switch(filters.sort) {
+    switch (filters.sort) {
       case 'calories-low':
         return [...recipes].sort((a, b) => a.calories - b.calories);
       case 'calories-high':
@@ -111,13 +111,13 @@ export default function RecipeApp() {
   const toggleFavorite = (recipe) => {
     const isFavorite = favorites.some(fav => fav.uri === recipe.uri);
     let updatedFavorites;
-    
+
     if (isFavorite) {
       updatedFavorites = favorites.filter(fav => fav.uri !== recipe.uri);
     } else {
       updatedFavorites = [...favorites, recipe];
     }
-    
+
     setFavorites(updatedFavorites);
     localStorage.setItem('recipeFavorites', JSON.stringify(updatedFavorites));
   };
@@ -126,11 +126,6 @@ export default function RecipeApp() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
-      <Head>
-        <title>Recipe Finder | Discover Delicious Meals</title>
-        <meta name="description" content="Search and save your favorite recipes" />
-      </Head>
-
       {/* Header */}
       <header className="bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg">
         <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
@@ -140,17 +135,17 @@ export default function RecipeApp() {
             </div>
             <h1 className="text-3xl font-bold">Recipe Finder</h1>
           </div>
-          
+
           <div className="flex space-x-3">
-            <button 
+            <button
               onClick={() => setShowFavorites(!showFavorites)}
               className={`px-4 py-2 rounded-full flex items-center ${showFavorites ? 'bg-white text-amber-600' : 'bg-amber-600 text-white'}`}
             >
-              <FiHeart className="mr-2" /> 
+              <FiHeart className="mr-2" />
               {showFavorites ? 'Show All' : `Favorites (${favorites.length})`}
             </button>
-            
-            <button 
+
+            <button
               onClick={() => setShowFilters(!showFilters)}
               className="px-4 py-2 bg-white text-amber-600 rounded-full flex items-center"
             >
@@ -169,7 +164,7 @@ export default function RecipeApp() {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
             Search from thousands of recipes, filter by your preferences, and save your favorites for later
           </p>
-          
+
           <div className="max-w-2xl mx-auto">
             <SearchBar onSearch={handleSearch} initialValue={searchTerm} />
           </div>
@@ -178,9 +173,9 @@ export default function RecipeApp() {
         {/* Filters */}
         {showFilters && (
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <Filters 
-              filters={filters} 
-              onFilterChange={handleFilterChange} 
+            <Filters
+              filters={filters}
+              onFilterChange={handleFilterChange}
               onClose={() => setShowFilters(false)}
             />
           </div>
@@ -190,15 +185,15 @@ export default function RecipeApp() {
         <section>
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-2xl font-semibold text-gray-800">
-              {showFavorites 
-                ? `Your Favorite Recipes (${favorites.length})` 
+              {showFavorites
+                ? `Your Favorite Recipes (${favorites.length})`
                 : `Search Results for "${searchTerm}"`}
             </h3>
-            
+
             {!showFavorites && (
               <div className="flex items-center">
                 <span className="mr-2 text-gray-600">Sort by:</span>
-                <select 
+                <select
                   value={filters.sort}
                   onChange={(e) => handleFilterChange({ sort: e.target.value })}
                   className="text-black bg-white border border-gray-300 rounded-lg px-3 py-2"
@@ -219,7 +214,7 @@ export default function RecipeApp() {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
             </div>
           )}
-          
+
           {error && (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
               <p className="text-red-700">{error}</p>
@@ -235,14 +230,14 @@ export default function RecipeApp() {
                   : "No recipes found. Try a different search term or adjust your filters."}
               </div>
               {showFavorites ? (
-                <button 
+                <button
                   onClick={() => setShowFavorites(false)}
                   className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600 transition-colors"
                 >
                   Browse Recipes
                 </button>
               ) : (
-                <button 
+                <button
                   onClick={() => setShowFilters(true)}
                   className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600 transition-colors"
                 >
@@ -254,7 +249,7 @@ export default function RecipeApp() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {displayedRecipes.map((recipe, index) => (
-              <RecipeCard 
+              <RecipeCard
                 key={`${recipe.uri}-${index}`}
                 recipe={recipe}
                 isFavorite={favorites.some(fav => fav.uri === recipe.uri)}
@@ -266,7 +261,7 @@ export default function RecipeApp() {
           {/* Pagination */}
           {!showFavorites && !loading && recipes.length > 0 && (
             <div className="mt-10">
-              <Pagination 
+              <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
