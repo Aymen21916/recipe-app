@@ -125,6 +125,10 @@ export default function RecipeApp() {
   const displayedRecipes = showFavorites ? favorites : recipes;
 
   return (
+    <>
+    <Head>
+      <link rel="icon" href="/favicon.png" />
+    </Head>
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
       {/* Header */}
       <header className="bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg">
@@ -281,5 +285,6 @@ export default function RecipeApp() {
         </div>
       </footer>
     </div>
+    </>
   );
 }
